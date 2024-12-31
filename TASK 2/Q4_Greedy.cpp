@@ -23,16 +23,16 @@ struct DSU {
     }
 
     //merge if not already connected
-    void unite(int u, int v) {
-        int rootU = find(u), rootV = find(v);
-        if (rootU == rootV) return;
-        if (size[rootU] > size[rootV]) swap(rootU, rootV);
-        size[rootV] += size[rootU];
-        size[rootU] = 0;
-        parent[rootU] = rootV;
+    void unit(int u, int v) {
+        int rootStart = find(u), rootEnd = find(v);
+        if (rootStart == rootEnd) return;
+        if (size[rootStart] > size[rootEnd]) swap(rootStart, rootEnd);
+        size[rootEnd] += size[rootStart];
+        size[rootStart] = 0;
+        parent[rootStart] = rootEnd;
     }
     //check if having the same parent
-    bool connected(int u, int v) {
+    bool isConnected(int u, int v) {
         return find(u) == find(v);
     }
 };
@@ -80,9 +80,9 @@ int main() {
         vector<Edge> usedEdges;
 
         for (const auto& edge : tempEdges) {
-            if (!dsu.connected(edge.start, edge.end)) {
+            if (dsu.find(edge.start) != dsu.find(edge.end)) {
                 usedEdges.push_back(edge);
-                dsu.unite(edge.start, edge.end);
+                dsu.unit(edge.start, edge.end);
                 numOfEdges++;
                 silver = edge.s;
             }
