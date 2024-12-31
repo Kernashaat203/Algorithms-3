@@ -2,41 +2,44 @@
 #include <vector>
 using namespace std;
 
-pair<int, vector<int>> knapsack(vector<int>& weights, vector<int>& values, int capacity) {
-    int n = weights.size();
+int knapsack(vector<int>& items_weight, vector<int>& items_value, int total_capacity) {
+    int n = items_weight.size();
 
-    vector<vector<int>> V(n + 1, vector<int>(capacity + 1, 0));
+    //first all values equal 0
+    vector<vector<int>> DP(n + 1, vector<int>(total_capacity + 1, 0));
 
-    // Fill DP table
-    for (int i = 1; i <= n; ++i) {
-        for (int j = 1; j <= capacity; ++j) {
-            if (weights[i - 1] <= j) { // Item fit
-                V[i][j] = max(values[i - 1] + V[i - 1][j - weights[i - 1]], V[i - 1][j]);
-            } else { // Item doesn't fit
-                V[i][j] = V[i - 1][j];
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= total_capacity; j++) {
+            //if the current item can be added or not
+            if (items_weight[i - 1] <= j) {
+                //we can tak  or leave the item based on which is maximum
+                DP[i][j] = max(items_value[i - 1] + DP[i - 1][j - items_weight[i - 1]], DP[i - 1][j]);
+
+            } else {
+                //will not take the item
+                DP[i][j] = DP[i - 1][j];
             }
         }
     }
-    return {V[n][capacity], {}};
+    return DP[n][total_capacity];
 }
 
 int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     int n;
     cin >> n;
 
-    for (int i = 0; i < n; ++i) {
-        int k,m;  // Maximum weight the truck can carry and Number of bags
-        cin >> k >> m;
-
-        vector<int> weights(m), values(m);
+    for (int i = 0; i < n; i++) {
+        int k,m;
+        cin>>k>>m;
+        vector<int> w(m);
+        vector<int>v(m);
         for (int j = 0; j < m; ++j) {
-            cin >> weights[j] >> values[j];
+            cin >> w[j] >> v[j];
         }
-
-        pair<int, vector<int>> result = knapsack(weights, values, k);
-
-        cout << "Hey stupid robber, you can get " << result.first << "." ;
+        int answer = knapsack(w, v, k);
+        cout << "Hey stupid robber, you can get " << answer << "." <<'\n';
     }
-
     return 0;
 }

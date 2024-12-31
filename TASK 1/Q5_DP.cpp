@@ -19,13 +19,19 @@ int main(){
 
     for (int i = 1; i < n; i++) {
         for (int j = 0; j < i; j++) {
+            // check if we can increase the  subsequence ending at v[j]
             if (v[i] > v[j]) {
                 LIS[i] = max(LIS[i], LIS[j] + 1);
             }
         }
     }
+    int result = 0;
+    //to find the larget value which have tha longest subs
+    for (int i = 0; i < LIS.size(); i++) {
+        if(LIS[i] > result)
+            result = LIS[i];
+    }
 
-    int result = *max_element(LIS.begin(), LIS.end());
     cout << result ;
 
     return 0;
